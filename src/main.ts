@@ -188,8 +188,6 @@ async function main(){
   if(slack_icon != ""){
     slack_payload_body.text = slack_text
   }
-  slack_payload_body.text = 'メッセージここに書くよん🧚‍♀️'
-
 
   const request_options = {
     uri: webhook_url,
