@@ -21,7 +21,8 @@ interface SlackPayloadBody {
     username?: string,
     icon_emoji?: string,
     icon_url?: string,
-    attachments: SlackAttachment[]
+    attachments: SlackAttachment[],
+    text?: string
 }
 
 interface SlackAttachment {
@@ -59,9 +60,10 @@ async function main(){
   const github_token: string = core.getInput('repo_token', { required: true })
   const include_jobs: string = core.getInput('include_jobs', { required: true })
   const slack_channel: string = core.getInput('channel')
-  const slack_name: string = core.getInput('name') + 'メッセージここに書くよん🧚‍♀️'
+  const slack_name: string = core.getInput('name')
   const slack_icon: string = core.getInput('icon_url')
   const slack_emoji: string = core.getInput('icon_emoji') // https://www.webfx.com/tools/emoji-cheat-sheet/
+  const slack_text: string = core.getInput('text')
   // Force as secret, forces *** when trying to print or log values
   core.setSecret(github_token)
   core.setSecret(webhook_url)
@@ -183,6 +185,11 @@ async function main(){
   if(slack_icon != ""){
     slack_payload_body.icon_url = slack_icon
   }
+  if(slack_icon != ""){
+    slack_payload_body.text = slack_text
+  }
+  slack_payload_body.text = 'メッセージここに書くよん🧚‍♀️'
+
 
   const request_options = {
     uri: webhook_url,
