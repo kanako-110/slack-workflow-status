@@ -23,11 +23,8 @@ inputs:
   icon_url:
     description: 'Override the default webhook icon with an image via url.'
     required: false
-   text:
-    description: 'set slack message content.'
-    required: false
   include_jobs:
-    description: 'Should the slack notification include individual job status and run times'
+    descrtiption: 'Should the slack notification include individual job status and run times'
     required: true
     default: true
 runs:
