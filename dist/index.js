@@ -3474,8 +3474,8 @@ async function main() {
     const slack_attachment = {
         mrkdwn_in: ["text"],
         color: workflow_color,
-        // title: "test link",
-        // title_link: "https://rashiku-team.slack.com/archives/C01QQ06B924/p1620824259035800",
+        title: "リリースワークフローに飛んでね🧚‍♀️",
+        title_link: "https://rashiku-team.slack.com/archives/C01QQ06B924/p1620824259035800",
         text: status_string + details_string,
         footer: repo_url,
         footer_icon: "https://github.githubassets.com/favicon.ico",
@@ -3485,14 +3485,22 @@ async function main() {
         mrkdwn_in: ["text"],
         color: workflow_color,
         unfurl_links: true,
-        text: "<https://rashiku-team.slack.com/archives/C01QQ06B924/p1620824259035800>",
+        text: "",
         footer: repo_url,
         footer_icon: "https://github.githubassets.com/favicon.ico",
         fields: (include_jobs == 'true') ? job_fields : []
     };
+    const block = {
+        "type": "section",
+        "text": {
+            "type": "mrkdwn",
+            "text": "<https://www.notion.so/gaudiy3/5f60a3efcd6046ea81eaa9ba99dac435|リリース時の流れもチェック✅>"
+        }
+    };
     // Build our notification payload
     const slack_payload_body = {
-        attachments: [slack_attachment, slack_attachment_link]
+        attachments: [slack_attachment, slack_attachment_link],
+        block: [block]
     };
     // Do we have any overrides?
     if (slack_name != "") {
