@@ -3520,7 +3520,9 @@ async function main() {
         // title: "リリースワークフローに飛んでね🧚‍♀️",
         // title_link:
         //   "<https://rashiku-team.slack.com/archives/C01QQ06B924/p1620824259035800| リリースワークフローに飛んでね> \n<https://www.notion.so/gaudiy3/5f60a3efcd6046ea81eaa9ba99dac435|リリースの流れもチェック✅> ",
-        text: status_string + details_string + "\n<https://rashiku-team.slack.com/archives/C01QQ06B924/p1620824259035800| リリースワークフローに飛んでね> \n<https://www.notion.so/gaudiy3/5f60a3efcd6046ea81eaa9ba99dac435|リリースの流れもチェック✅>",
+        text: status_string +
+            details_string +
+            "\n*リリースプルリクが作成されました。Slackのリリース事前報告ワークフローを作成してください:heart:*\n<https://rashiku-team.slack.com/archives/C01QQ06B924/p1620824259035800| リリースワークフローに飛んでね> \n<https://www.notion.so/gaudiy3/5f60a3efcd6046ea81eaa9ba99dac435|リリースの流れもチェック✅>",
         footer: repo_url,
         footer_icon: "https://github.githubassets.com/favicon.ico",
         fields: include_jobs == "true" ? job_fields : [],
