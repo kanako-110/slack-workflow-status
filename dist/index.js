@@ -3486,6 +3486,8 @@ async function main() {
         color: workflow_color,
         unfurl_links: true,
         text: "",
+        title: "リリースの流れもチェック✅",
+        title_link: "https://www.notion.so/gaudiy3/5f60a3efcd6046ea81eaa9ba99dac435",
         footer: repo_url,
         footer_icon: "https://github.githubassets.com/favicon.ico",
         fields: (include_jobs == 'true') ? job_fields : []
