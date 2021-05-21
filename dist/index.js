@@ -3474,16 +3474,24 @@ async function main() {
     const slack_attachment = {
         mrkdwn_in: ["text"],
         color: workflow_color,
-        title: "test link",
-        title_link: "https://rashiku-team.slack.com/archives/C01QQ06B924/p1620824259035800",
+        // title: "test link",
+        // title_link: "https://rashiku-team.slack.com/archives/C01QQ06B924/p1620824259035800",
         text: status_string + details_string,
+        footer: repo_url,
+        footer_icon: "https://github.githubassets.com/favicon.ico",
+        fields: (include_jobs == 'true') ? job_fields : []
+    };
+    const slack_attachment_link = {
+        mrkdwn_in: ["text"],
+        color: workflow_color,
+        text: "<https://rashiku-team.slack.com/archives/C01QQ06B924/p1620824259035800>",
         footer: repo_url,
         footer_icon: "https://github.githubassets.com/favicon.ico",
         fields: (include_jobs == 'true') ? job_fields : []
     };
     // Build our notification payload
     const slack_payload_body = {
-        attachments: [slack_attachment]
+        attachments: [slack_attachment, slack_attachment_link]
     };
     // Do we have any overrides?
     if (slack_name != "") {
