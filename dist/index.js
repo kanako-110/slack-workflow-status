@@ -3369,19 +3369,23 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-process.on('unhandledRejection', handleError);
+process.on("unhandledRejection", handleError);
 main().catch(handleError);
 // Action entrypoint
 async function main() {
     // Collect Action Inputs
-    const webhook_url = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('slack_webhook_url', { required: true });
-    const github_token = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('repo_token', { required: true });
-    const include_jobs = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('include_jobs', { required: true });
-    const slack_channel = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('channel');
-    const slack_name = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('name');
-    const slack_icon = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('icon_url');
-    const slack_emoji = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('icon_emoji'); // https://www.webfx.com/tools/emoji-cheat-sheet/
-    const slack_text = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput('text');
+    const webhook_url = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("slack_webhook_url", {
+        required: true,
+    });
+    const github_token = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("repo_token", { required: true });
+    const include_jobs = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("include_jobs", {
+        required: true,
+    });
+    const slack_channel = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("channel");
+    const slack_name = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("name");
+    const slack_icon = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("icon_url");
+    const slack_emoji = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("icon_emoji"); // https://www.webfx.com/tools/emoji-cheat-sheet/
+    const slack_text = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("text");
     // Force as secret, forces *** when trying to print or log values
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.setSecret(github_token);
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.setSecret(webhook_url);
@@ -3391,7 +3395,7 @@ async function main() {
     const actor = process.env.GITHUB_ACTOR;
     const event = process.env.GITHUB_EVENT_NAME;
     const ref = process.env.GITHUB_REF;
-    const branch = ref.substr(ref.lastIndexOf('/') + 1);
+    const branch = ref.substr(ref.lastIndexOf("/") + 1);
     // Auth github with octokit module
     const options = {};
     const github = new _actions_github__WEBPACK_IMPORTED_MODULE_1__.GitHub(github_token, options);
@@ -3399,7 +3403,7 @@ async function main() {
     const workflow_run = await github.actions.getWorkflowRun({
         owner: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.owner,
         repo: _actions_github__WEBPACK_IMPORTED_MODULE_1__.context.repo.repo,
-        run_id: run_id
+        run_id: run_id,
     });
     // Fetch workflow job information
     const jobs_response = await github.request(workflow_run.data.jobs_url);
@@ -3431,7 +3435,14 @@ async function main() {
         // Create a new field for this job
         job_fields.push({
             short: true,
-            value: job_status_icon + " <" + job.html_url + "|" + job.name + "> (" + job_duration(new Date(job.started_at), new Date(job.completed_at)) + ")"
+            value: job_status_icon +
+                " <" +
+                job.html_url +
+                "|" +
+                job.name +
+                "> (" +
+                job_duration(new Date(job.started_at), new Date(job.completed_at)) +
+                ")",
         });
     }
     // Configure slack attachment styling
@@ -3451,21 +3462,53 @@ async function main() {
     }
     // Payload Formatting Shortcuts
     const workflow_duration = job_duration(new Date(workflow_run.data.created_at), new Date(workflow_run.data.updated_at));
-    const repo_url = "<https://github.com/" + workflow_run.data.repository.full_name + "|*" + workflow_run.data.repository.full_name + "*>";
-    const branch_url = "<https://github.com/" + workflow_run.data.repository.full_name + "/tree/" + branch + "|*" + branch + "*>";
-    const workflow_run_url = "<" + workflow_run.data.html_url + "|#" + workflow_run.data.run_number + ">";
+    const repo_url = "<https://github.com/" +
+        workflow_run.data.repository.full_name +
+        "|*" +
+        workflow_run.data.repository.full_name +
+        "*>";
+    const branch_url = "<https://github.com/" +
+        workflow_run.data.repository.full_name +
+        "/tree/" +
+        branch +
+        "|*" +
+        branch +
+        "*>";
+    const workflow_run_url = "<" +
+        workflow_run.data.html_url +
+        "|#" +
+        workflow_run.data.run_number +
+        ">";
     // Example: Success: AnthonyKinson's `push` on `master` for pull_request
     let status_string = workflow_msg + " " + actor + "'s `" + event + "` on `" + branch_url + "`\n";
     // Example: Workflow: My Workflow #14 completed in `1m 30s`
-    const details_string = "Workflow: " + workflow_name + " " + workflow_run_url + " completed in `" + workflow_duration + "`";
+    const details_string = "Workflow: " +
+        workflow_name +
+        " " +
+        workflow_run_url +
+        " completed in `" +
+        workflow_duration +
+        "`";
     // Build Pull Request string if required
     let pull_requests = "";
     for (let pull_request of workflow_run.data.pull_requests) {
-        pull_requests += ", <https://github.com/" + workflow_run.data.repository.full_name + "/pull/" + pull_request.number + "|#" + pull_request.number + "> from `" + pull_request.head.ref + "` to `" + pull_request.base.ref + "`";
+        pull_requests +=
+            ", <https://github.com/" +
+                workflow_run.data.repository.full_name +
+                "/pull/" +
+                pull_request.number +
+                "|#" +
+                pull_request.number +
+                "> from `" +
+                pull_request.head.ref +
+                "` to `" +
+                pull_request.base.ref +
+                "`";
     }
     if (pull_requests != "") {
         pull_requests = pull_requests.substr(1);
-        status_string = workflow_msg + " " + actor + "'s `pull_request`" + pull_requests + "\n";
+        status_string =
+            workflow_msg + " " + actor + "'s `pull_request`" + pull_requests + "\n";
     }
     // We're using old style attachments rather than the new blocks because:
     // - Blocks don't allow colour indicators on messages
@@ -3474,35 +3517,36 @@ async function main() {
     const slack_attachment = {
         mrkdwn_in: ["text"],
         color: workflow_color,
-        title: "リリースワークフローに飛んでね🧚‍♀️",
-        title_link: "https://rashiku-team.slack.com/archives/C01QQ06B924/p1620824259035800",
+        // title: "リリースワークフローに飛んでね🧚‍♀️",
+        title_link: "<https://rashiku-team.slack.com/archives/C01QQ06B924/p1620824259035800| リリースワークフローに飛んでね> \n<https://www.notion.so/gaudiy3/5f60a3efcd6046ea81eaa9ba99dac435|リリースの流れもチェック✅> ",
         text: status_string + details_string,
         footer: repo_url,
         footer_icon: "https://github.githubassets.com/favicon.ico",
-        fields: (include_jobs == 'true') ? job_fields : []
+        fields: include_jobs == "true" ? job_fields : [],
     };
     const slack_attachment_link = {
         mrkdwn_in: ["text"],
         color: workflow_color,
         unfurl_links: true,
         text: "",
-        title: "リリースの流れもチェック✅",
-        title_link: "https://www.notion.so/gaudiy3/5f60a3efcd6046ea81eaa9ba99dac435",
+        // title: "リリースの流れもチェック✅",
+        // title_link:
+        //   "https://www.notion.so/gaudiy3/5f60a3efcd6046ea81eaa9ba99dac435",
         footer: repo_url,
         footer_icon: "https://github.githubassets.com/favicon.ico",
-        fields: (include_jobs == 'true') ? job_fields : []
+        fields: include_jobs == "true" ? job_fields : [],
     };
     const block = {
-        "type": "section",
-        "text": {
-            "type": "mrkdwn",
-            "text": "<https://www.notion.so/gaudiy3/5f60a3efcd6046ea81eaa9ba99dac435|リリース時の流れもチェック✅>"
-        }
+        type: "section",
+        text: {
+            type: "mrkdwn",
+            text: "<https://www.notion.so/gaudiy3/5f60a3efcd6046ea81eaa9ba99dac435|リリース時の流れもチェック✅>",
+        },
     };
     // Build our notification payload
     const slack_payload_body = {
         attachments: [slack_attachment, slack_attachment_link],
-        block: [block]
+        block: [block],
     };
     // Do we have any overrides?
     if (slack_name != "") {
@@ -3522,11 +3566,11 @@ async function main() {
     }
     const request_options = {
         uri: webhook_url,
-        method: 'POST',
+        method: "POST",
         body: slack_payload_body,
-        json: true
+        json: true,
     };
-    request_promise_native__WEBPACK_IMPORTED_MODULE_2__(request_options).catch(err => {
+    request_promise_native__WEBPACK_IMPORTED_MODULE_2__(request_options).catch((err) => {
         _actions_core__WEBPACK_IMPORTED_MODULE_0__.setFailed(err);
     });
 }
@@ -3543,9 +3587,12 @@ const job_duration = function (start, end) {
     let seconds = Math.floor(delta % 60);
     // Format duration sections
     const format_duration = function (value, text, hide_on_zero) {
-        return (value <= 0 && hide_on_zero) ? "" : value + text + " ";
+        return value <= 0 && hide_on_zero ? "" : value + text + " ";
     };
-    return format_duration(days, "d", true) + format_duration(hours, "h", true) + format_duration(minutes, "m", true) + format_duration(seconds, "s", false).trim();
+    return (format_duration(days, "d", true) +
+        format_duration(hours, "h", true) +
+        format_duration(minutes, "m", true) +
+        format_duration(seconds, "s", false).trim());
 };
 function handleError(err) {
     console.error(err);
