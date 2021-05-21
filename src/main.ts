@@ -21,7 +21,7 @@ interface SlackPayloadBody {
     username?: string,
     icon_emoji?: string,
     icon_url?: string,
-    // attachments: SlackAttachment[],
+    attachments: SlackAttachment[],
     text?: string
 }
 
@@ -162,6 +162,8 @@ async function main(){
   const slack_attachment: SlackAttachment = {
     mrkdwn_in: ["text"],
     color: workflow_color,
+    title: "test link",
+    title_link: "https://rashiku-team.slack.com/archives/C01QQ06B924/p1620824259035800",
     text: status_string + details_string,
     footer: repo_url,
     footer_icon: "https://github.githubassets.com/favicon.ico",
@@ -169,7 +171,7 @@ async function main(){
   }
   // Build our notification payload
   const slack_payload_body: SlackPayloadBody = {
-    // attachments: [slack_attachment]
+    attachments: [slack_attachment]
   }
 
   // Do we have any overrides?
