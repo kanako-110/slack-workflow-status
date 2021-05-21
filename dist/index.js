@@ -3481,7 +3481,7 @@ async function main() {
     };
     // Build our notification payload
     const slack_payload_body = {
-        attachments: [slack_attachment]
+    // attachments: [slack_attachment]
     };
     // Do we have any overrides?
     if (slack_name != "") {

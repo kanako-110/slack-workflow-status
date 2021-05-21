@@ -21,7 +21,7 @@ interface SlackPayloadBody {
     username?: string,
     icon_emoji?: string,
     icon_url?: string,
-    attachments: SlackAttachment[],
+    // attachments: SlackAttachment[],
     text?: string
 }
 
@@ -169,7 +169,7 @@ async function main(){
   }
   // Build our notification payload
   const slack_payload_body: SlackPayloadBody = {
-    attachments: [slack_attachment]
+    // attachments: [slack_attachment]
   }
 
   // Do we have any overrides?
