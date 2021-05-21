@@ -32,6 +32,7 @@ interface SlackAttachment {
   footer: string
   footer_icon: string
   fields: SlackAttachmentFields[]
+  unfurl_links?: boolean
   author_icon?: string
   author_link?: string
   author_name?: string
@@ -173,10 +174,12 @@ async function main(){
   const slack_attachment_link: SlackAttachment = {
     mrkdwn_in: ["text"],
     color: workflow_color,
+    unfurl_links: true,
     text: "<https://rashiku-team.slack.com/archives/C01QQ06B924/p1620824259035800>",
     footer: repo_url,
     footer_icon: "https://github.githubassets.com/favicon.ico",
     fields: (include_jobs == 'true') ? job_fields : []
+    
   }
   // Build our notification payload
   const slack_payload_body: SlackPayloadBody = {

@@ -3484,6 +3484,7 @@ async function main() {
     const slack_attachment_link = {
         mrkdwn_in: ["text"],
         color: workflow_color,
+        unfurl_links: true,
         text: "<https://rashiku-team.slack.com/archives/C01QQ06B924/p1620824259035800>",
         footer: repo_url,
         footer_icon: "https://github.githubassets.com/favicon.ico",
