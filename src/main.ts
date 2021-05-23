@@ -22,7 +22,6 @@ interface SlackPayloadBody {
   icon_url?: string;
   attachments: SlackAttachment[];
   text?: string;
-  block?: object[];
   unfurl_links?: boolean;
 }
 
@@ -69,7 +68,7 @@ async function main() {
   const slack_icon: string = core.getInput("icon_url");
   const slack_emoji: string = core.getInput("icon_emoji"); // https://www.webfx.com/tools/emoji-cheat-sheet/
   const slack_text: string = core.getInput("text");
-  const unfurl_links: boolean = core.getInput("unfurl_links") == "true"
+  const unfurl_links: boolean = core.getInput("unfurl_links") == "true";
 
   // Force as secret, forces *** when trying to print or log values
   core.setSecret(github_token);
@@ -217,22 +216,7 @@ async function main() {
   const slack_attachment: SlackAttachment = {
     mrkdwn_in: ["text"],
     color: workflow_color,
-    // title: "リリースワークフローに飛んでね🧚‍♀️",
-    // title_link:
-    //   "<https://rashiku-team.slack.com/archives/C01QQ06B924/p1620824259035800| リリースワークフローに飛んでね> \n<https://www.notion.so/gaudiy3/5f60a3efcd6046ea81eaa9ba99dac435|リリースの流れもチェック✅> ",
-    text:
-      status_string +
-      details_string +
-      "\n*リリースプルリクが作成されました。Slackのリリース事前報告ワークフローを作成してください:heart:*\n<https://rashiku-team.slack.com/archives/C01QQ06B924/p1620824259035800| リリースワークフローに飛んでね> \n<https://www.notion.so/gaudiy3/5f60a3efcd6046ea81eaa9ba99dac435|リリースの流れもチェック✅>",
-    footer: repo_url,
-    footer_icon: "https://github.githubassets.com/favicon.ico",
-    fields: include_jobs == "true" ? job_fields : [],
-  };
-
-  const slack_attachment_link: SlackAttachment = {
-    mrkdwn_in: ["text"],
-    color: workflow_color,
-    text: "",
+    text: status_string + details_string,
     footer: repo_url,
     footer_icon: "https://github.githubassets.com/favicon.ico",
     fields: include_jobs == "true" ? job_fields : [],
@@ -240,7 +224,7 @@ async function main() {
 
   // Build our notification payload
   const slack_payload_body: SlackPayloadBody = {
-    attachments: [slack_attachment, slack_attachment_link],
+    attachments: [slack_attachment],
   };
 
   // Do we have any overrides?
