@@ -3386,6 +3386,7 @@ async function main() {
     const slack_icon = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("icon_url");
     const slack_emoji = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("icon_emoji"); // https://www.webfx.com/tools/emoji-cheat-sheet/
     const slack_text = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("text");
+    const unfurl_links = _actions_core__WEBPACK_IMPORTED_MODULE_0__.getInput("unfurl_links") == "true";
     // Force as secret, forces *** when trying to print or log values
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.setSecret(github_token);
     _actions_core__WEBPACK_IMPORTED_MODULE_0__.setSecret(webhook_url);
@@ -3530,26 +3531,14 @@ async function main() {
     const slack_attachment_link = {
         mrkdwn_in: ["text"],
         color: workflow_color,
-        unfurl_links: true,
         text: "",
-        // title: "リリースの流れもチェック✅",
-        // title_link:
-        //   "https://www.notion.so/gaudiy3/5f60a3efcd6046ea81eaa9ba99dac435",
         footer: repo_url,
         footer_icon: "https://github.githubassets.com/favicon.ico",
         fields: include_jobs == "true" ? job_fields : [],
     };
-    const block = {
-        type: "section",
-        text: {
-            type: "mrkdwn",
-            text: "<https://www.notion.so/gaudiy3/5f60a3efcd6046ea81eaa9ba99dac435|リリース時の流れもチェック✅>",
-        },
-    };
     // Build our notification payload
     const slack_payload_body = {
         attachments: [slack_attachment, slack_attachment_link],
-        block: [block],
     };
     // Do we have any overrides?
     if (slack_name != "") {
@@ -3566,6 +3555,9 @@ async function main() {
     }
     if (slack_icon != "") {
         slack_payload_body.text = slack_text;
+    }
+    if (slack_icon != "") {
+        slack_payload_body.unfurl_links = unfurl_links;
     }
     const request_options = {
         uri: webhook_url,

@@ -23,6 +23,7 @@ interface SlackPayloadBody {
   attachments: SlackAttachment[];
   text?: string;
   block?: object[];
+  unfurl_links?: boolean;
 }
 
 interface SlackAttachment {
@@ -32,7 +33,6 @@ interface SlackAttachment {
   footer: string;
   footer_icon: string;
   fields: SlackAttachmentFields[];
-  unfurl_links?: boolean;
   author_icon?: string;
   author_link?: string;
   author_name?: string;
@@ -69,6 +69,8 @@ async function main() {
   const slack_icon: string = core.getInput("icon_url");
   const slack_emoji: string = core.getInput("icon_emoji"); // https://www.webfx.com/tools/emoji-cheat-sheet/
   const slack_text: string = core.getInput("text");
+  const unfurl_links: boolean = core.getInput("unfurl_links") == "true"
+
   // Force as secret, forces *** when trying to print or log values
   core.setSecret(github_token);
   core.setSecret(webhook_url);
@@ -230,28 +232,15 @@ async function main() {
   const slack_attachment_link: SlackAttachment = {
     mrkdwn_in: ["text"],
     color: workflow_color,
-    unfurl_links: true,
     text: "",
-    // title: "リリースの流れもチェック✅",
-    // title_link:
-    //   "https://www.notion.so/gaudiy3/5f60a3efcd6046ea81eaa9ba99dac435",
     footer: repo_url,
     footer_icon: "https://github.githubassets.com/favicon.ico",
     fields: include_jobs == "true" ? job_fields : [],
   };
 
-  const block = {
-    type: "section",
-    text: {
-      type: "mrkdwn",
-      text: "<https://www.notion.so/gaudiy3/5f60a3efcd6046ea81eaa9ba99dac435|リリース時の流れもチェック✅>",
-    },
-  };
-
   // Build our notification payload
   const slack_payload_body: SlackPayloadBody = {
     attachments: [slack_attachment, slack_attachment_link],
-    block: [block],
   };
 
   // Do we have any overrides?
@@ -269,6 +258,9 @@ async function main() {
   }
   if (slack_icon != "") {
     slack_payload_body.text = slack_text;
+  }
+  if (slack_icon != "") {
+    slack_payload_body.unfurl_links = unfurl_links;
   }
 
   const request_options = {
